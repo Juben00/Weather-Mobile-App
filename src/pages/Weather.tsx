@@ -62,12 +62,6 @@ const formatHour = (isoString: string) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
 };
 
-// Helper to format date
-const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
-};
-
 // Helper to format just the day name
 const formatDayName = (dateString: string) => {
     const date = new Date(dateString);
@@ -191,21 +185,6 @@ export default function Weather({ }: WeatherProps) {
         }
     };
 
-    const saveCurrentLocation = async () => {
-        if (weather) {
-            try {
-                const db = await Database.load("sqlite:weather.db");
-                await db.execute(
-                    "INSERT OR IGNORE INTO locations (name, country) VALUES (?, ?)",
-                    [weather.location, weather.country]
-                );
-                await loadSavedLocations();
-            } catch (err) {
-                console.error("Failed to save location:", err);
-            }
-        }
-    };
-
     const deleteLocation = async (id: number, e: React.MouseEvent) => {
         e.stopPropagation();
         try {
@@ -228,7 +207,7 @@ export default function Weather({ }: WeatherProps) {
 
     const toggleSaveLocation = async () => {
         if (!weather) return;
-        
+
         try {
             const db = await Database.load("sqlite:weather.db");
             if (isLocationSaved(weather.location)) {
