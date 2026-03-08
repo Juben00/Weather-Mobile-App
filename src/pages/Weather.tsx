@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api/core";
 import * as geolocation from "@tauri-apps/plugin-geolocation";
 import Database from "@tauri-apps/plugin-sql";
 import { Button } from "@/components/ui/button";
-import { IoArrowBack, IoLocation, IoLocationOutline, IoNavigate, IoTrashOutline, IoAddCircleOutline, IoSunny, IoMoon, IoWater, IoUmbrella } from "react-icons/io5";
+import { IoArrowBack, IoLocation, IoLocationOutline, IoNavigate, IoTrashOutline, IoAddCircleOutline, IoSunny, IoMoon, IoWater, IoUmbrella, IoClose } from "react-icons/io5";
 import { WiHumidity, WiStrongWind, WiThermometer, WiBarometer, WiCloudy, WiWindDeg } from "react-icons/wi";
 import { MdVisibility } from "react-icons/md";
 
@@ -227,7 +227,7 @@ export default function Weather({ }: WeatherProps) {
     };
 
     return (
-        <div className="flex flex-col w-full min-h-full">
+        <div className="flex flex-col w-full min-h-full pt-[env(safe-area-inset-top)]">
 
             {/* Header */}
             <div className="flex items-center gap-3 p-4 border-b border-border/50">
@@ -252,8 +252,20 @@ export default function Weather({ }: WeatherProps) {
                             value={city}
                             onChange={(e) => setCity(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            className="w-full h-full pl-4 pr-4 py-2.5 rounded-xl border border-border bg-white dark:bg-muted/30 focus:border-primary/50 transition-colors outline-none text-foreground"
+                            className="w-full h-full pl-4 pr-10 py-2.5 rounded-xl border border-border bg-white dark:bg-muted/30 focus:border-primary/50 transition-colors outline-none text-foreground"
                         />
+                        {city && (
+                            <button
+                                onClick={() => {
+                                    setCity("");
+                                    setWeather(null);
+                                    setError("");
+                                }}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                <IoClose size={18} />
+                            </button>
+                        )}
                     </div>
                     <Button
                         onClick={handleSearch}
@@ -274,7 +286,12 @@ export default function Weather({ }: WeatherProps) {
 
             {/* Weather Display */}
             <div className="flex-1 overflow-y-auto p-4 flex items-center justify-center">
-                {weather ? (
+                {loading || gpsLoading ? (
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+                        <p className="text-muted-foreground">{gpsLoading ? "Getting your location..." : "Loading weather..."}</p>
+                    </div>
+                ) : weather ? (
                     <div className="w-full max-w-md mx-auto space-y-4">
                         {/* Location */}
                         <div className="flex items-center justify-center gap-2">
