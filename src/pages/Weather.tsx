@@ -417,7 +417,7 @@ export default function Weather({ }: WeatherProps) {
                                 <h3 className="font-semibold mb-3 text-sm">Hourly Forecast</h3>
                                 <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
                                     {weather.hourly.slice(0, 24).map((hour, index) => (
-                                        <div key={index} className="flex-shrink-0 text-center min-w-[60px]">
+                                        <div key={index} className="shrink-0 text-center min-w-15">
                                             <p className="text-xs text-muted-foreground">{formatHour(hour.time)}</p>
                                             <div className="text-2xl my-1">{hour.icon}</div>
                                             <p className="font-semibold text-sm">{Math.round(hour.temperature)}°</p>
